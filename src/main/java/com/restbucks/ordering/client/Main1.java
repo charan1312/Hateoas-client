@@ -11,6 +11,7 @@ import com.restbucks.ordering.client.activities.PaymentActivity;
 import com.restbucks.ordering.client.activities.PlaceOrderActivity;
 import com.restbucks.ordering.client.activities.ReadOrderActivity;
 import com.restbucks.ordering.client.activities.UpdateOrderActivity;
+import com.restbucks.ordering.model.Appeal;
 import com.restbucks.ordering.model.Order;
 import com.restbucks.ordering.model.OrderStatus;
 import com.restbucks.ordering.model.Payment;
@@ -26,16 +27,16 @@ import com.sun.jersey.api.client.WebResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Main {
+public class Main1 {
     
-    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Main1.class);
     
-    private static final String RESTBUCKS_MEDIA_TYPE = "application/vnd.restbucks+xml";
+    private static final String APPEALS_MEDIA_TYPE = "application/vnd-cse564-appeals+xml";
     private static final long ONE_MINUTE = 60000; 
     
-    private static final String ENTRY_POINT_URI = "http://localhost:8080/CSE564_HATEAOS_RestbucksOrderingServer/webresources/order";
+    private static final String ENTRY_POINT_URI = "http://localhost:8080/CSE564_HATEAOS_RestbucksOrderingServer/webresources/appeal";
 
-    public static void main(String[] args) throws Exception {
+/*    public static void main(String[] args) throws Exception {
         URI serviceUri = new URI(ENTRY_POINT_URI);
         happyPathTest(serviceUri);
     }
@@ -50,11 +51,11 @@ public class Main {
 
     private static void happyPathTest(URI serviceUri) throws Exception {
         LOG.info("Starting Happy Path Test with Service URI {}", serviceUri);
-        // Place the order
-        LOG.info("Step 1. Place the order");
-        System.out.println(String.format("About to start happy path test. Placing order at [%s] via POST", serviceUri.toString()));
-        Order order = order().withRandomItems().build();
-        LOG.debug("Created base order {}", order);
+        // Create the appeal
+        LOG.info("Step 1. Create the appeal");
+        System.out.println(String.format("About to start happy path test. Creating appeal at [%s] via POST", serviceUri.toString()));
+        Appeal appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1");
+        LOG.debug("Created base appeal {}", appeal);
         Client client = Client.create();
         LOG.debug("Created client {}", client);
         OrderRepresentation orderRepresentation = client.resource(serviceUri).accept(RESTBUCKS_MEDIA_TYPE).type(RESTBUCKS_MEDIA_TYPE).post(OrderRepresentation.class, new ClientOrder(order));
@@ -65,7 +66,7 @@ public class Main {
         LOG.info("\n\nStep 2. Try to update a different order");
         System.out.println(String.format("About to update an order with bad URI [%s] via POST", orderRepresentation.getUpdateLink().getUri().toString() + "/bad-uri"));
         order = order().withRandomItems().build();
-        LOG.debug("Created base order {}", order); 
+        LOG.debug("Created base order {}", order);
         Link badLink = new Link("bad", new RestbucksUri(orderRepresentation.getSelfLink().getUri().toString() + "/bad-uri"), RESTBUCKS_MEDIA_TYPE);
         LOG.debug("Create bad link {}", badLink);
         ClientResponse badUpdateResponse = client.resource(badLink.getUri()).accept(badLink.getMediaType()).type(badLink.getMediaType()).post(ClientResponse.class, new OrderRepresentation(order));
@@ -126,4 +127,6 @@ public class Main {
             System.out.println(String.format("Order status [%s], enjoy your drink", finalResponse.getEntity(OrderRepresentation.class).getStatus()));
         }
     }
+    
+*/
 }
