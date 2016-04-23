@@ -16,18 +16,18 @@ public class RemoveAppealActivity {
         AppealRepository appealRepository = AppealRepository.current();
 
         if (appealRepository.appealNotSubmitted(identifier)) {
-            throw new NoSuchOrderException();
+            throw new NoSuchAppealException();
         }
 
         Appeal appeal = appealRepository.get(identifier);
 
-        // Can't delete an appeal thats in process or approved or rejected
-        if (appeal.getStatus() == AppealStatus.INPROCESS || appeal.getStatus() == AppealStatus.APPROVED || appeal.getStatus() == AppealStatus.REJECTED) {
+        // Can't delete an appeal thats in process or updaegrade or approved or rejected
+        if (appeal.getStatus() == AppealStatus.INPROCESS || appeal.getStatus() == AppealStatus.APPROVED || appeal.getStatus() == AppealStatus.UPDATEGRADE || appeal.getStatus() == AppealStatus.REJECTED) {
             throw new AppealDeletionException();
         }
 
-        //Can delete an appeal that is in created or submitted state
-        if(appeal.getStatus() == AppealStatus.CREATED || appeal.getStatus() == AppealStatus.SUBMITTED) { // An unpaid order is being cancelled 
+        //Can delete an appeal that is in submitted or followup state
+        if(appeal.getStatus() == AppealStatus.FOLLOWUP || appeal.getStatus() == AppealStatus.SUBMITTED) { // An unpaid order is being cancelled 
             appealRepository.remove(identifier);
         }
         return new AppealRepresentation(appeal);

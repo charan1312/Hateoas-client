@@ -9,13 +9,13 @@ public class Appeal {
     
     private final int studentId;
     private final int gradeId;
+    private List<String> comments;
     private String title;
-    private final List<String> comments;
     //@XmlTransient
-    private AppealStatus appealStatus = AppealStatus.CREATED;
+    private AppealStatus appealStatus = AppealStatus.SUBMITTED;
 
     public Appeal(int sid, int gid, String title) {
-      this(sid, gid, title, AppealStatus.CREATED);
+      this(sid, gid, title, AppealStatus.SUBMITTED);
     }
     
 
@@ -54,6 +54,10 @@ public class Appeal {
 
     public void addComment(String comment) {         // add additional comments
         this.comments.add(comment);
+    }
+    
+    public void setComments(List<String> comments) {
+        this.comments = comments;
     }
     
     public List<String> getComments() {         // add additional comments

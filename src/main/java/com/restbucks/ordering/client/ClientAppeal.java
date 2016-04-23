@@ -54,14 +54,25 @@ public class ClientAppeal {
         return new Appeal(studentId, gradeId , title, appealStatus );
     }
     
-    public Location getLocation() {
-        LOG.debug("Executing ClientOrder.getLocation");
-        return location;
-    }
     
-    public List<Item> getItems() {
-        LOG.debug("Executing ClientOrder.getItems");
-        return items;
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public int getGradeId() {
+        return gradeId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public AppealStatus getAppealStatus() {
+        return appealStatus;
     }
 
     @Override
@@ -80,22 +91,5 @@ public class ClientAppeal {
         }
     }
     
-    public OrderStatus getStatus() {
-        LOG.debug("Executing ClientOrder.getStatus");
-        return status;
-    }
 
-    public double getCost() {
-        LOG.debug("Executing ClientOrder.getCost");
-        double total = 0.0;
-        if (items != null) {
-            for (Item item : items) {
-                if(item != null && item.getDrink() != null) {
-                    total += item.getDrink().getPrice();
-                }
-            }
-        }
-        return total;
-    }
-*/
 }

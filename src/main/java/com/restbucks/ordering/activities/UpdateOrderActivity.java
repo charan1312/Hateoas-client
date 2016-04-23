@@ -8,6 +8,7 @@ import com.restbucks.ordering.representations.OrderRepresentation;
 import com.restbucks.ordering.representations.RestbucksUri;
 
 public class UpdateOrderActivity {
+    
     public OrderRepresentation update(Order order, RestbucksUri orderUri) {
         Identifier orderIdentifier = orderUri.getId();
 
@@ -24,7 +25,6 @@ public class UpdateOrderActivity {
         
         storedOrder.setStatus(storedOrder.getStatus());
         storedOrder.calculateCost();
-
 
         return OrderRepresentation.createResponseOrderRepresentation(storedOrder, orderUri); 
     }

@@ -18,15 +18,17 @@ import com.restbucks.ordering.representations.RestbucksUri;
 
 public class CreateAppealActivity {
     public AppealRepresentation create(Appeal appeal, AppealsUri requestUri) {
-        appeal.setAppealStatus(AppealStatus.CREATED);
+        appeal.setAppealStatus(AppealStatus.SUBMITTED);
                 
         Identifier identifier = AppealRepository.current().store(appeal);
         
         AppealsUri appealUri = new AppealsUri(requestUri.getBaseUri() + "/appeal/" + identifier.toString());
-        AppealsUri gradeUri = new AppealsUri(requestUri.getBaseUri() + "/grade/" + appeal.getGradeId());
+        //AppealsUri gradeUri = new AppealsUri(requestUri.getBaseUri() + "/grade/" + appeal.getGradeId());
 
         return new AppealRepresentation(appeal, 
-                new Link1(Representation1.RELATIONS_URI + "submit", appealUri),
+                new Link1(Representation1.RELATIONS_URI + "followup", appealUri),
+                new Link1(Representation1.RELATIONS_URI + "delete", appealUri),
+                new Link1(Representation1.RELATIONS_URI + "process", appealUri),
                 new Link1(Representation1.SELF_REL_VALUE, appealUri));
     }
 }

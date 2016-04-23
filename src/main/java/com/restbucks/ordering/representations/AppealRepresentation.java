@@ -69,23 +69,36 @@ public class AppealRepresentation extends Representation1 {
         AppealsUri gradeUri = new AppealsUri(appealUri.getBaseUri() + "/grade/" + appeal.getGradeId());
         LOG.debug("Grade URI = {}", gradeUri);
 
-        if(appeal.getStatus() == AppealStatus.CREATED) {
-            LOG.debug("The appeal status is {}", AppealStatus.CREATED);
-            appealRepresentation = new AppealRepresentation(appeal, 
-                    new Link1(RELATIONS_URI + "submit", appealUri),
-                    new Link1(Representation1.SELF_REL_VALUE, appealUri));
-        } else if(appeal.getStatus() == AppealStatus.SUBMITTED) {
+//        if(appeal.getStatus() == AppealStatus.CREATED) {
+//            LOG.debug("The appeal status is {}", AppealStatus.CREATED);
+//            appealRepresentation = new AppealRepresentation(appeal, 
+//                    new Link1(RELATIONS_URI + "submit", appealUri),
+//                    new Link1(Representation1.SELF_REL_VALUE, appealUri));
+//        } else 
+        if(appeal.getStatus() == AppealStatus.SUBMITTED) {
             LOG.debug("The appeal status is {}", AppealStatus.SUBMITTED);
             appealRepresentation = new AppealRepresentation(appeal, 
                     new Link1(RELATIONS_URI + "delete", appealUri),
                     new Link1(RELATIONS_URI + "process", appealUri),
+                    new Link1(RELATIONS_URI + "followup", appealUri),
+                    new Link1(Representation1.SELF_REL_VALUE, appealUri));
+        } else if(appeal.getStatus() == AppealStatus.FOLLOWUP) {
+            LOG.debug("The appeal status is {}", AppealStatus.FOLLOWUP);
+            appealRepresentation = new AppealRepresentation(appeal, 
+                    new Link1(RELATIONS_URI + "process", appealUri),
+                    new Link1(RELATIONS_URI + "delete", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.INPROCESS) {
             LOG.debug("The appeal status is {}", AppealStatus.INPROCESS);
             appealRepresentation = new AppealRepresentation(appeal, 
                     new Link1(RELATIONS_URI + "grade", gradeUri),
                     new Link1(RELATIONS_URI + "reject", appealUri), 
-                    new Link1(RELATIONS_URI + "approve", appealUri),
+//                    new Link1(RELATIONS_URI + "approve", appealUri),
+                    new Link1(Representation1.SELF_REL_VALUE, appealUri));
+        } else if(appeal.getStatus() == AppealStatus.UPDATEGRADE) {
+            LOG.debug("The appeal status is {}", AppealStatus.UPDATEGRADE);
+            appealRepresentation = new AppealRepresentation(appeal,
+                    new Link1(RELATIONS_URI + "approve", appealUri), 
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.APPROVED) {
             LOG.debug("The appeal status is {}", AppealStatus.APPROVED);
@@ -154,10 +167,10 @@ public class AppealRepresentation extends Representation1 {
         return appeal;
     }
 
-    public Link1 getSubmitLink() {
-        LOG.info("Retrieving the Submit link of appeal");
-        return getLinkByName(RELATIONS_URI + "submit");
-    }
+//    public Link1 getSubmitLink() {
+//        LOG.info("Retrieving the Submit link of appeal");
+//        return getLinkByName(RELATIONS_URI + "submit");
+//    }
 
     public Link1 getGradeLink() {
         LOG.info("Retrieving the Grade link ");
@@ -192,6 +205,11 @@ public class AppealRepresentation extends Representation1 {
     public Link1 getSelfLink() {
         LOG.info("Retrieving the Self link of appeal");
         return getLinkByName("self");
+    }
+
+    public Link1 getFollowUpLink() {
+        LOG.info("Retrieving the FollowUp for appeal link ");
+        return getLinkByName(RELATIONS_URI + "followup");
     }
 
     public AppealStatus getStatus() {

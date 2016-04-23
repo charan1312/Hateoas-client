@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlEnumValue;
 
 
 public enum AppealStatus {
-    @XmlEnumValue(value="Submitted")          //for follow-up
+    @XmlEnumValue(value="Submitted")          // default state
     SUBMITTED,
     @XmlEnumValue(value="Approved")          //happy case
     APPROVED, 
@@ -14,6 +14,8 @@ public enum AppealStatus {
     REJECTED,
     @XmlEnumValue(value="Deleted")              // student abandoned case
     DELETED, 
-    @XmlEnumValue(value="Created")              //default value when created
-    CREATED
+    @XmlEnumValue(value="FollowUp")              //Follow up case
+    FOLLOWUP,
+    @XmlEnumValue(value="UpdateGrade")              //update grade before approved
+    UPDATEGRADE
 }

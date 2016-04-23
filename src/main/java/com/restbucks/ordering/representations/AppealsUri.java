@@ -24,6 +24,11 @@ public class AppealsUri {
         this(uri.toString() + "/" + identifier.toString());
     }
 
+    public int getGradeId() {
+        String path = uri.getPath();
+        return Integer.valueOf(path.substring(path.lastIndexOf("/") + 1, path.length()));
+    }
+    
     public Identifier getId() {
         String path = uri.getPath();
         return new Identifier(path.substring(path.lastIndexOf("/") + 1, path.length()));
