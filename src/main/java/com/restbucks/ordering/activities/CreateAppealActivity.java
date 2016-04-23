@@ -27,6 +27,7 @@ public class CreateAppealActivity {
 
         return new AppealRepresentation(appeal, 
                 new Link1(Representation1.RELATIONS_URI + "followup", appealUri),
+                new Link1(Representation1.RELATIONS_URI + "update", appealUri),
                 new Link1(Representation1.RELATIONS_URI + "delete", appealUri),
                 new Link1(Representation1.RELATIONS_URI + "process", appealUri),
                 new Link1(Representation1.SELF_REL_VALUE, appealUri));

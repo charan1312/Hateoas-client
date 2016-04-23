@@ -18,7 +18,7 @@ import com.restbucks.ordering.representations.RestbucksUri;
 
 public class SubmitAppealActivity {
     public AppealRepresentation create(Appeal appeal, AppealsUri requestUri) {
-        appeal.setAppealStatus(AppealStatus.CREATED);
+        appeal.setAppealStatus(AppealStatus.SUBMITTED);
                 
         Identifier identifier = AppealRepository.current().store(appeal);
         

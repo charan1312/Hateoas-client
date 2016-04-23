@@ -10,10 +10,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.restbucks.ordering.model.Appeal;
 import com.restbucks.ordering.model.AppealStatus;
-import com.restbucks.ordering.model.Item;
-import com.restbucks.ordering.model.Location;
-import com.restbucks.ordering.model.Order;
-import com.restbucks.ordering.model.OrderStatus;
 import com.restbucks.ordering.representations.Representation1;
 
 import org.slf4j.Logger;
@@ -90,6 +86,4 @@ public class ClientAppeal {
             throw new RuntimeException(e);
         }
     }
-    
-
 }

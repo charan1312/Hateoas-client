@@ -5,10 +5,12 @@ import java.util.Map.Entry;
 
 import com.restbucks.ordering.model.Appeal;
 import com.restbucks.ordering.model.Identifier;
+import com.sun.jersey.spi.resource.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Singleton
 public class AppealRepository {
     
     private static final Logger LOG = LoggerFactory.getLogger(AppealRepository.class);

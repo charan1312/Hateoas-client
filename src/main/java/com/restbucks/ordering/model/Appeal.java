@@ -32,7 +32,7 @@ public class Appeal {
     }
     
     public void setTitle(String title) {       // IS TO CHANGE THE TITLE BEFORE THE APPEAL IS SUBMITTED AND IT IS NOT IN-PROCESS YET
-        if(this.appealStatus.equals(AppealStatus.SUBMITTED))
+        if(this.appealStatus.equals(AppealStatus.SUBMITTED) || this.appealStatus.equals(AppealStatus.FOLLOWUP))
             this.title = title;
     }
 

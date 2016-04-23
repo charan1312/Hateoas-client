@@ -7,6 +7,8 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -18,6 +20,7 @@ import com.restbucks.ordering.model.Appeal;
 import com.restbucks.ordering.model.AppealStatus;
 
 @XmlRootElement(name = "appeal", namespace = Representation1.APPEALS_NAMESPACE)
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AppealRepresentation extends Representation1 {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppealRepresentation.class);
@@ -81,24 +84,28 @@ public class AppealRepresentation extends Representation1 {
                     new Link1(RELATIONS_URI + "delete", appealUri),
                     new Link1(RELATIONS_URI + "process", appealUri),
                     new Link1(RELATIONS_URI + "followup", appealUri),
+                    new Link1(RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.FOLLOWUP) {
             LOG.debug("The appeal status is {}", AppealStatus.FOLLOWUP);
             appealRepresentation = new AppealRepresentation(appeal, 
                     new Link1(RELATIONS_URI + "process", appealUri),
+                    new Link1(RELATIONS_URI + "update", appealUri),
                     new Link1(RELATIONS_URI + "delete", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.INPROCESS) {
             LOG.debug("The appeal status is {}", AppealStatus.INPROCESS);
             appealRepresentation = new AppealRepresentation(appeal, 
                     new Link1(RELATIONS_URI + "grade", gradeUri),
-                    new Link1(RELATIONS_URI + "reject", appealUri), 
+                    new Link1(RELATIONS_URI + "reject", appealUri),
+                    new Link1(RELATIONS_URI + "update", appealUri),
 //                    new Link1(RELATIONS_URI + "approve", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.UPDATEGRADE) {
             LOG.debug("The appeal status is {}", AppealStatus.UPDATEGRADE);
             appealRepresentation = new AppealRepresentation(appeal,
-                    new Link1(RELATIONS_URI + "approve", appealUri), 
+                    new Link1(RELATIONS_URI + "approve", appealUri),
+                    new Link1(RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.APPROVED) {
             LOG.debug("The appeal status is {}", AppealStatus.APPROVED);
@@ -127,6 +134,7 @@ public class AppealRepresentation extends Representation1 {
 
         try {
             this.studentId = appeal.getStudentID();
+            this.gradeId = appeal.getGradeId();
             this.comments = appeal.getComments();
             this.title = appeal.getTitle();
             this.appealStatus = appeal.getStatus();
@@ -160,7 +168,7 @@ public class AppealRepresentation extends Representation1 {
             throw new InvalidAppealException();
         }
 
-        Appeal appeal = new Appeal(studentId, gradeId, title);
+        Appeal appeal = new Appeal(studentId, gradeId, title, appealStatus);
 
         LOG.debug("Retrieving the Appeal Representation {}", appeal);
 
@@ -220,5 +228,25 @@ public class AppealRepresentation extends Representation1 {
     public String getTitle() {
         LOG.info("Retrieving the appeal title {}", title);
         return title;
+    }
+
+    public int getStudentId() {
+        LOG.info("Retrieving the appeal -Student id {}", studentId);
+        return studentId;
+    }
+
+    public int getGradeId() {
+        LOG.info("Retrieving the appeal -grade id {}", gradeId);
+        return gradeId;
+    }
+
+    public List<String> getComments() {
+        LOG.info("Retrieving the appeal comments {}", comments);
+        return comments;
+    }
+
+    public AppealStatus getAppealStatus() {
+        LOG.info("Retrieving the appeal status {}", appealStatus);
+        return appealStatus;
     }
 }

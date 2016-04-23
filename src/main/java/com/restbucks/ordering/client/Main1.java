@@ -15,6 +15,7 @@ import com.restbucks.ordering.model.Appeal;
 import com.restbucks.ordering.model.Order;
 import com.restbucks.ordering.model.OrderStatus;
 import com.restbucks.ordering.model.Payment;
+import com.restbucks.ordering.representations.AppealRepresentation;
 import com.restbucks.ordering.representations.Link;
 import com.restbucks.ordering.representations.OrderRepresentation;
 import com.restbucks.ordering.representations.PaymentRepresentation;
@@ -36,7 +37,7 @@ public class Main1 {
     
     private static final String ENTRY_POINT_URI = "http://localhost:8080/CSE564_HATEAOS_RestbucksOrderingServer/webresources/appeal";
 
-/*    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         URI serviceUri = new URI(ENTRY_POINT_URI);
         happyPathTest(serviceUri);
     }
@@ -52,17 +53,17 @@ public class Main1 {
     private static void happyPathTest(URI serviceUri) throws Exception {
         LOG.info("Starting Happy Path Test with Service URI {}", serviceUri);
         // Create the appeal
-        LOG.info("Step 1. Create the appeal");
+        LOG.info("Step 1. Create the appeal--");
         System.out.println(String.format("About to start happy path test. Creating appeal at [%s] via POST", serviceUri.toString()));
         Appeal appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1");
-        LOG.debug("Created base appeal {}", appeal);
+        LOG.debug("Created base appeal-- {}", appeal);
         Client client = Client.create();
-        LOG.debug("Created client {}", client);
-        OrderRepresentation orderRepresentation = client.resource(serviceUri).accept(RESTBUCKS_MEDIA_TYPE).type(RESTBUCKS_MEDIA_TYPE).post(OrderRepresentation.class, new ClientOrder(order));
-        LOG.debug("Created orderRepresentation {} denoted by the URI {}", orderRepresentation, orderRepresentation.getSelfLink().getUri().toString());
-        System.out.println(String.format("Order placed at [%s]", orderRepresentation.getSelfLink().getUri().toString()));
+        LOG.debug("Created client {}", client);    //Retrieving the Update Appeal link
+        AppealRepresentation appealRepresentation = client.resource(serviceUri).accept(APPEALS_MEDIA_TYPE).type(APPEALS_MEDIA_TYPE).post(AppealRepresentation.class, new ClientAppeal(appeal));
+        LOG.debug("Created appealRepresentation {} denoted by the URI {}", appealRepresentation, appealRepresentation.getSelfLink().getUri().toString());
+        System.out.println(String.format("Appeal created at [%s]", appealRepresentation.getSelfLink().getUri().toString()));
         
-        // Try to update a different order
+/*        // Try to update a different order
         LOG.info("\n\nStep 2. Try to update a different order");
         System.out.println(String.format("About to update an order with bad URI [%s] via POST", orderRepresentation.getUpdateLink().getUri().toString() + "/bad-uri"));
         order = order().withRandomItems().build();
@@ -126,7 +127,8 @@ public class Main1 {
         if(finalResponse.getStatus() == 200) {
             System.out.println(String.format("Order status [%s], enjoy your drink", finalResponse.getEntity(OrderRepresentation.class).getStatus()));
         }
+*/
     }
     
-*/
+
 }
