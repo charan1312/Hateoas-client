@@ -34,16 +34,19 @@ public class UpdateAppealActivity {
         if(appeal.getStatus() == AppealStatus.FOLLOWUP) {
             return  new AppealRepresentation(storedAppeal, 
                     new Link1(Representation1.RELATIONS_URI + "process", appealUri),
+                    new Link1(Representation1.RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.RELATIONS_URI + "delete", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.INPROCESS) {
             return  new AppealRepresentation(storedAppeal, 
-                    new Link1(Representation1.RELATIONS_URI + "grade", gradeUri),
+                    new Link1(Representation1.RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.RELATIONS_URI + "reject", appealUri), 
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.UPDATEGRADE) {
             return  new AppealRepresentation(storedAppeal,
-                    new Link1(Representation1.RELATIONS_URI + "approve", appealUri), 
+                    new Link1(Representation1.RELATIONS_URI + "approve", appealUri),
+                    new Link1(Representation1.RELATIONS_URI + "grade", gradeUri),
+                    new Link1(Representation1.RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.APPROVED) {
             return  new AppealRepresentation(storedAppeal,
@@ -52,8 +55,8 @@ public class UpdateAppealActivity {
             return  new AppealRepresentation(storedAppeal,
                     new Link1(Representation1.SELF_REL_VALUE, appealUri)); 
         } else if(appeal.getStatus() == AppealStatus.DELETED) {
-            return  new AppealRepresentation(storedAppeal,
-                    new Link1(Representation1.SELF_REL_VALUE, appealUri));            
+            return  new AppealRepresentation(storedAppeal);
+//                    new Link1(Representation1.SELF_REL_VALUE, appealUri));            
         }
         else
             return AppealRepresentation.createResponseAppealRepresentation(storedAppeal, appealUri); 

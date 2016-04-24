@@ -12,11 +12,17 @@ import com.restbucks.ordering.client.activities.PlaceOrderActivity;
 import com.restbucks.ordering.client.activities.ReadOrderActivity;
 import com.restbucks.ordering.client.activities.UpdateOrderActivity;
 import com.restbucks.ordering.model.Appeal;
+import com.restbucks.ordering.model.AppealStatus;
+import com.restbucks.ordering.model.Grade;
+import com.restbucks.ordering.model.GradeItem;
 import com.restbucks.ordering.model.Order;
 import com.restbucks.ordering.model.OrderStatus;
 import com.restbucks.ordering.model.Payment;
 import com.restbucks.ordering.representations.AppealRepresentation;
+import com.restbucks.ordering.representations.AppealsUri;
+import com.restbucks.ordering.representations.GradeRepresentation;
 import com.restbucks.ordering.representations.Link;
+import com.restbucks.ordering.representations.Link1;
 import com.restbucks.ordering.representations.OrderRepresentation;
 import com.restbucks.ordering.representations.PaymentRepresentation;
 import com.restbucks.ordering.representations.ReceiptRepresentation;
@@ -54,7 +60,7 @@ public class Main1 {
         LOG.info("Starting Happy Path Test with Service URI {}", serviceUri);
         // Create the appeal
         LOG.info("Step 1. Create the appeal--");
-        System.out.println(String.format("About to start happy path test. Creating appeal at [%s] via POST", serviceUri.toString()));
+        System.out.println(String.format("Creating appeal at [%s] via POST", serviceUri.toString()));
         Appeal appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1");
         LOG.debug("Created base appeal-- {}", appeal);
         Client client = Client.create();
@@ -62,7 +68,53 @@ public class Main1 {
         AppealRepresentation appealRepresentation = client.resource(serviceUri).accept(APPEALS_MEDIA_TYPE).type(APPEALS_MEDIA_TYPE).post(AppealRepresentation.class, new ClientAppeal(appeal));
         LOG.debug("Created appealRepresentation {} denoted by the URI {}", appealRepresentation, appealRepresentation.getSelfLink().getUri().toString());
         System.out.println(String.format("Appeal created at [%s]", appealRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
         
+        LOG.info("Step 2. Professor Accepting the appeal and changing the state to INPROCESS");
+        System.out.println(String.format("About to update an appeal with URI [%s] via POST", appealRepresentation.getProcessLink().getUri().toString()));
+        appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.INPROCESS);
+        LOG.debug("Created updated appeal-- {}", appeal);
+        Link1 processLink = appealRepresentation.getProcessLink();
+        LOG.debug("Created appeal process link {}", processLink);
+        AppealRepresentation inprocessRepresentation = client.resource(processLink.getUri()).accept(processLink.getMediaType()).type(processLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
+        LOG.debug("Created in-process appeal representation link {}", inprocessRepresentation);
+        System.out.println(String.format("Appeal updated at [%s]", inprocessRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+
+        LOG.info("Step 3. Professor Update the appeal status to UPDATEGRADE after which he can access the grade link to update the score");
+        System.out.println(String.format("About to update an appeal with URI [%s] via POST", inprocessRepresentation.getUpdateLink().getUri().toString()));
+        appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.UPDATEGRADE);
+        LOG.debug("Created updated appeal-- {}", appeal);
+        Link1 updateLink = inprocessRepresentation.getUpdateLink();
+        LOG.debug("Created appeal update grade link {}", updateLink);
+        AppealRepresentation updateGradeRepresentation = client.resource(updateLink.getUri()).accept(updateLink.getMediaType()).type(updateLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
+        LOG.debug("Created update-grade appeal representation link {}", updateGradeRepresentation);
+        System.out.println(String.format("Appeal updated at [%s]", updateGradeRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+
+        LOG.info("Step 4.A. Professor Updating the Grade resource using the link from previous step");
+        System.out.println(String.format("About to update the grade with URI [%s] via POST", updateGradeRepresentation.getGradeLink().getUri().toString()));
+        LOG.debug("Creating updated grade -- ");
+        Grade grade = new Grade(1,1,90,"Marks Updated",GradeItem.ASSIGNMENT); 
+        LOG.debug("Created updated grade-- {}", grade);
+        Link1 gradeLink = updateGradeRepresentation.getGradeLink();
+        LOG.debug("Created grade update link {}", gradeLink);
+        GradeRepresentation gradeRepresentation = client.resource(gradeLink.getUri()).accept(gradeLink.getMediaType()).type(gradeLink.getMediaType()).put(GradeRepresentation.class, new GradeRepresentation(grade));
+        LOG.debug("Created updated grade representation link {}", gradeRepresentation);
+        System.out.println(String.format("Grade updated at [%s]", gradeRepresentation.getUpdatedGradeLink().getUri().toString()));
+        System.out.println("\n\n");
+
+        LOG.info("Step 4.B. Professor Updates the appeal status to APPROVED after updating the grade");
+        System.out.println(String.format("About to update an appeal with URI [%s] via POST", updateGradeRepresentation.getApproveLink().getUri().toString()));
+        appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.APPROVED);
+        LOG.debug("Created updated appeal-- {}", appeal);
+        Link1 approveLink = updateGradeRepresentation.getApproveLink();
+        LOG.debug("Created appeal approve link {}", approveLink);
+        AppealRepresentation approveRepresentation = client.resource(approveLink.getUri()).accept(approveLink.getMediaType()).type(approveLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
+        LOG.debug("Created approved appeal representation link {}", approveRepresentation);
+        System.out.println(String.format("Appeal updated at [%s]", approveRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+
 /*        // Try to update a different order
         LOG.info("\n\nStep 2. Try to update a different order");
         System.out.println(String.format("About to update an order with bad URI [%s] via POST", orderRepresentation.getUpdateLink().getUri().toString() + "/bad-uri"));

@@ -21,7 +21,7 @@ public class Grade {         // GRADE WILL HAVE GRADEITEM TYPE, GRADEITEM ID , G
         sb.append("Grade ID: " + gradeID + "\n" );
         sb.append("Grade Item: " + gradeItem + "\n");
         sb.append("Grade Item Id: " + gradeItemId + " \n");
-        sb.append("Grade: " + grade);
+        sb.append("Grade: " + grade + " \n");
         sb.append("Feedback: " + feedback + " \n");
         return sb.toString();
     }

@@ -96,7 +96,7 @@ public class AppealRepresentation extends Representation1 {
         } else if(appeal.getStatus() == AppealStatus.INPROCESS) {
             LOG.debug("The appeal status is {}", AppealStatus.INPROCESS);
             appealRepresentation = new AppealRepresentation(appeal, 
-                    new Link1(RELATIONS_URI + "grade", gradeUri),
+//                    new Link1(RELATIONS_URI + "grade", gradeUri),
                     new Link1(RELATIONS_URI + "reject", appealUri),
                     new Link1(RELATIONS_URI + "update", appealUri),
 //                    new Link1(RELATIONS_URI + "approve", appealUri),
@@ -105,6 +105,7 @@ public class AppealRepresentation extends Representation1 {
             LOG.debug("The appeal status is {}", AppealStatus.UPDATEGRADE);
             appealRepresentation = new AppealRepresentation(appeal,
                     new Link1(RELATIONS_URI + "approve", appealUri),
+                    new Link1(RELATIONS_URI + "grade", gradeUri),
                     new Link1(RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.APPROVED) {
@@ -117,8 +118,8 @@ public class AppealRepresentation extends Representation1 {
                     new Link1(Representation1.SELF_REL_VALUE, appealUri)); 
         } else if(appeal.getStatus() == AppealStatus.DELETED) {
             LOG.debug("The appeal status is {}", AppealStatus.DELETED);
-            appealRepresentation = new AppealRepresentation(appeal,
-                    new Link1(Representation1.SELF_REL_VALUE, appealUri));            
+            appealRepresentation = new AppealRepresentation(appeal);
+            //        new Link1(Representation1.SELF_REL_VALUE, appealUri));            
         } else {
             LOG.debug("The appeal status is in an unknown status");
             throw new RuntimeException("Unknown Order Status");
