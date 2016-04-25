@@ -18,9 +18,16 @@ public class Appeal {
       this(sid, gid, title, AppealStatus.SUBMITTED);
     }
     
-
-    public Appeal(int sid, int gid, String title, AppealStatus appealStatus) {
+    public Appeal(int sid, int gid, String title ,AppealStatus appealStatus) {
+        this.gradeId = gid;
+        this.studentId = sid;
+        this.title = title;
+        this.appealStatus = appealStatus;
         this.comments = new ArrayList<String>();
+    }
+
+    public Appeal(int sid, int gid, String title, List<String> comments ,AppealStatus appealStatus) {
+        this.comments = new ArrayList<String>(comments);
         this.gradeId = gid;
         this.studentId = sid;
         this.title = title;

@@ -2,6 +2,7 @@ package com.restbucks.ordering.representations;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.restbucks.ordering.activities.InvalidAppealException;
+import com.hateoas.appeals.activities.InvalidAppealException;
 import com.restbucks.ordering.model.Appeal;
 import com.restbucks.ordering.model.AppealStatus;
 
@@ -32,7 +33,7 @@ public class AppealRepresentation extends Representation1 {
     private int gradeId;
 
     @XmlElement(name = "comment", namespace = Representation1.APPEALS_NAMESPACE)
-    private List<String> comments;
+    private List<String> comments = new ArrayList<String>();
 
     @XmlElement(name = "title", namespace = Representation1.APPEALS_NAMESPACE)
     private String title;
@@ -131,7 +132,7 @@ public class AppealRepresentation extends Representation1 {
     }
 
     public AppealRepresentation(Appeal appeal, Link1... links) {
-        LOG.info("Creating an Appeal Representation for order = {} and links = {}", appeal.toString(), links.toString());
+        LOG.info("Creating an Appeal Representation = {} and links = {}", appeal.toString(), links.toString());
 
         try {
             this.studentId = appeal.getStudentID();
@@ -169,7 +170,7 @@ public class AppealRepresentation extends Representation1 {
             throw new InvalidAppealException();
         }
 
-        Appeal appeal = new Appeal(studentId, gradeId, title, appealStatus);
+        Appeal appeal = new Appeal(studentId, gradeId, title, comments, appealStatus);
 
         LOG.debug("Retrieving the Appeal Representation {}", appeal);
 

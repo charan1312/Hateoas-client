@@ -10,8 +10,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.restbucks.ordering.activities.InvalidOrderException;
-import com.restbucks.ordering.activities.UriExchange;
+import com.hateoas.appeals.activities.InvalidOrderException;
+import com.hateoas.appeals.activities.UriExchange;
 import com.restbucks.ordering.model.Item;
 import com.restbucks.ordering.model.Location;
 import com.restbucks.ordering.model.Order;

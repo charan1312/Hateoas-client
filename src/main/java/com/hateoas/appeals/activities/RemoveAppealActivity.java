@@ -1,6 +1,7 @@
-package com.restbucks.ordering.client.activities;
+package com.hateoas.appeals.activities;
 
-import com.hateoas.appeals.activities.AppealDeletionException;
+import com.restbucks.ordering.activities.AppealDeletionException;
+import com.restbucks.ordering.activities.NoSuchAppealException;
 import com.restbucks.ordering.model.Appeal;
 import com.restbucks.ordering.model.AppealStatus;
 import com.restbucks.ordering.model.Identifier;
@@ -32,6 +33,5 @@ public class RemoveAppealActivity {
             appealRepository.remove(identifier);
         }
         return new AppealRepresentation(appeal);
-
     }
 }

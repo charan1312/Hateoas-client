@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.restbucks.ordering.activities.InvalidGradeException;
+import com.hateoas.appeals.activities.InvalidGradeException;
 import com.restbucks.ordering.model.Grade;
 import com.restbucks.ordering.model.GradeItem;
 

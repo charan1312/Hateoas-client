@@ -45,7 +45,173 @@ public class Main1 {
 
     public static void main(String[] args) throws Exception {
         URI serviceUri = new URI(ENTRY_POINT_URI);
-        happyPathTest(serviceUri);
+//        happyPathTest(serviceUri);
+//        abandonedPathTest(serviceUri);
+//        followUpPathTest(serviceUri);
+//        badURIPathTest(serviceUri);
+        badIdPathTest(serviceUri);
+    }
+
+    private static void badIdPathTest(URI serviceUri) {
+        // TODO Auto-generated method stub
+        LOG.info("Starting Follow-Up Path Test with Rejection scenario with Service URI {}", serviceUri);
+        // Create the appeal
+        LOG.info("Step 1. Create the appeal---");
+        System.out.println(String.format("Creating appeal at [%s] via POST", serviceUri.toString()));
+        Appeal appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1");
+        LOG.debug("Created base appeal--- {}", appeal);
+        Client client = Client.create();
+        LOG.debug("Created client {}", client);    //Retrieving the Update Appeal link
+        AppealRepresentation appealRepresentation = client.resource(serviceUri).accept(APPEALS_MEDIA_TYPE).type(APPEALS_MEDIA_TYPE).post(AppealRepresentation.class, new ClientAppeal(appeal));
+        LOG.info("Created appealRepresentation {} denoted by the URI {}", appealRepresentation, appealRepresentation.getSelfLink().getUri().toString());
+        System.out.println(String.format("Appeal created at [%s]", appealRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+        
+        //appealRepresentation.getAppeal();
+        
+        LOG.info("Step 2. Professor Not responding and Student is Following up by changing the state to FOLLOWUP and adding some comments");
+        System.out.println(String.format("About to update an appeal with URI [%s] via POST", appealRepresentation.getFollowUpLink().getUri().toString()));
+        //appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.FOLLOWUP);
+        LOG.info("Getting the appeal from the previous representation and updating the status to followup");
+        appeal = appealRepresentation.getAppeal();     //+
+        appeal.setAppealStatus(AppealStatus.FOLLOWUP);     //+
+        appeal.addComment("Follow up for the appeal");            
+        LOG.debug("Created updated appeal-- {}", appeal);
+        Link1 badfollowUpLink = new Link1("badid", new AppealsUri(appealRepresentation.getFollowUpLink().getUri().toString() + "-wrong-id"),APPEALS_MEDIA_TYPE);
+        LOG.debug("Created followup badID link {}", badfollowUpLink);
+
+        ClientResponse badfollowUpResponse = client.resource(badfollowUpLink.getUri()).accept(badfollowUpLink.getMediaType()).type(badfollowUpLink.getMediaType()).post(ClientResponse.class, new AppealRepresentation(appeal));
+        LOG.info("Created BadID for Followup Response {}", badfollowUpResponse);
+        System.out.println(String.format("Tried to update the Appeal with BadID at [%s] via POST, output is [%d]",badfollowUpLink.getUri().toString(),badfollowUpResponse.getStatus()));
+        System.out.println("\n\n");
+    }
+
+    private static void badURIPathTest(URI serviceUri) {
+        // TODO Auto-generated method stub
+        LOG.info("Starting Bad URI Path Test with Service URI {}", serviceUri);
+        LOG.info("Step 1. Create the appeal--");
+        System.out.println(String.format("Creating appeal at [%s] via POST", serviceUri.toString()));
+        Appeal appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1");
+        LOG.debug("Created base appeal-- {}", appeal);
+        Client client = Client.create();
+        LOG.debug("Created client {}", client);    //Retrieving the Update Appeal link
+        AppealRepresentation appealRepresentation = client.resource(serviceUri).accept(APPEALS_MEDIA_TYPE).type(APPEALS_MEDIA_TYPE).post(AppealRepresentation.class, new ClientAppeal(appeal));
+        LOG.info("Created appealRepresentation {} denoted by the URI {}", appealRepresentation, appealRepresentation.getSelfLink().getUri().toString());
+        System.out.println(String.format("Appeal created at [%s]", appealRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+        
+        LOG.info("Step 2. Professor Accepting the appeal and changing the state to INPROCESS with a bad-uri");
+        System.out.println(String.format("About to update an appeal with BAD-URI [%s] via POST", appealRepresentation.getProcessLink().getUri().toString() + "/bad-uri"));
+        LOG.info("Getting the appeal from the previous representation and updating the status to Inprocess");
+        appeal = appealRepresentation.getAppeal();
+        appeal.setAppealStatus(AppealStatus.INPROCESS);
+        LOG.debug("Created updated appeal-- {}", appeal);
+        Link1 badprocessLink = new Link1("bad", new AppealsUri(appealRepresentation.getProcessLink().getUri().toString() + "/bad-uri"),APPEALS_MEDIA_TYPE);
+        LOG.debug("Created BAD-URI appeal process link {}",  badprocessLink);
+        ClientResponse badprocessResponse = client.resource(badprocessLink.getUri()).accept(badprocessLink.getMediaType()).type(badprocessLink.getMediaType()).post(ClientResponse.class, new AppealRepresentation(appeal));
+        LOG.info("Created BAD-URI Response {}", badprocessResponse);
+        System.out.println(String.format("Tried to update the Appeal with BAD_URI at [%s] via POST, output is [%d]",badprocessLink.getUri().toString(),badprocessResponse.getStatus()));
+        System.out.println("\n\n");
+    }
+
+    private static void followUpPathTest(URI serviceUri) {
+        // TODO Auto-generated method stub
+        LOG.info("Starting Follow-Up Path Test with Rejection scenario with Service URI {}", serviceUri);
+        // Create the appeal
+        LOG.info("Step 1. Create the appeal---");
+        System.out.println(String.format("Creating appeal at [%s] via POST", serviceUri.toString()));
+        Appeal appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1");
+        LOG.debug("Created base appeal--- {}", appeal);
+        Client client = Client.create();
+        LOG.debug("Created client {}", client);    //Retrieving the Update Appeal link
+        AppealRepresentation appealRepresentation = client.resource(serviceUri).accept(APPEALS_MEDIA_TYPE).type(APPEALS_MEDIA_TYPE).post(AppealRepresentation.class, new ClientAppeal(appeal));
+        LOG.info("Created appealRepresentation {} denoted by the URI {}", appealRepresentation, appealRepresentation.getSelfLink().getUri().toString());
+        System.out.println(String.format("Appeal created at [%s]", appealRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+        
+        //appealRepresentation.getAppeal();
+        
+        LOG.info("Step 2. Professor Not responding and Student is Following up by changing the state to FOLLOWUP and adding some comments");
+        System.out.println(String.format("About to update an appeal with URI [%s] via POST", appealRepresentation.getFollowUpLink().getUri().toString()));
+        //appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.FOLLOWUP);
+        LOG.info("Getting the appeal from the previous representation and updating the status to followup");
+        appeal = appealRepresentation.getAppeal();     //+
+        appeal.setAppealStatus(AppealStatus.FOLLOWUP);     //+
+        appeal.addComment("Follow up for the appeal");            
+        LOG.debug("Created updated appeal-- {}", appeal);
+        Link1 followUpLink = appealRepresentation.getFollowUpLink();
+        LOG.debug("Created appeal followup link {}", followUpLink);
+        AppealRepresentation followUpRepresentation = client.resource(followUpLink.getUri()).accept(followUpLink.getMediaType()).type(followUpLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
+        LOG.info("Created followup appeal representation link {}", followUpRepresentation);
+        System.out.println(String.format("Appeal updated at [%s]", followUpRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");     
+        
+        LOG.info("Step 3. Professor Accepting the appeal and changing the state to INPROCESS");
+        System.out.println(String.format("About to update an appeal with URI [%s] via POST", followUpRepresentation.getProcessLink().getUri().toString()));
+        //appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.INPROCESS);
+        LOG.info("Getting the appeal from the previous representation and updating the status to inprocess");
+        appeal = followUpRepresentation.getAppeal();      //+
+        appeal.setAppealStatus(AppealStatus.INPROCESS);     //+
+        appeal.addComment("Looking at the appeal now");     
+        LOG.debug("Created updated appeal-- {}", appeal);
+        Link1 processLink = followUpRepresentation.getProcessLink();
+        LOG.debug("Created appeal process link {}", processLink);
+        AppealRepresentation inprocessRepresentation = client.resource(processLink.getUri()).accept(processLink.getMediaType()).type(processLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
+        LOG.info("Created in-process appeal representation link {}", inprocessRepresentation);
+        System.out.println(String.format("Appeal updated at [%s]", inprocessRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+
+        LOG.info("Step 4. Professor Rejected the Appeal");
+        System.out.println(String.format("About to reject an appeal with URI [%s] via POST", inprocessRepresentation.getRejectLink().getUri().toString()));
+        //appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.REJECTED);
+        LOG.info("Getting the appeal from the previous representation and updating the status to Rejected");
+        appeal = inprocessRepresentation.getAppeal();  //+
+        appeal.setAppealStatus(AppealStatus.REJECTED);     //+
+        appeal.addComment("Rejecting the appeal as I dont see it valid");
+        LOG.debug("Created updated appeal-- {}", appeal);
+        Link1 rejectLink = inprocessRepresentation.getRejectLink();
+        LOG.debug("Created appeal reject grade link {}", rejectLink);
+        AppealRepresentation rejectRepresentation = client.resource(rejectLink.getUri()).accept(rejectLink.getMediaType()).type(rejectLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
+        LOG.info("Created reject appeal representation link {}", rejectRepresentation);
+        System.out.println(String.format("Appeal rejected at [%s]", rejectRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+    }
+
+    private static void abandonedPathTest(URI serviceUri) {
+        // TODO Auto-generated method stub
+        LOG.info("Starting Abandoned Path Test with Service URI {}", serviceUri);
+        // Create the appeal
+        LOG.info("Step 1. Create the appeal first--");
+        System.out.println(String.format("Creating appeal at [%s] via POST", serviceUri.toString()));
+        Appeal appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1");
+        LOG.debug("Created base appeal-- {}", appeal);
+        Client client = Client.create();
+        LOG.debug("Created client {}", client);    //Retrieving the Update Appeal link
+        AppealRepresentation appealRepresentation = client.resource(serviceUri).accept(APPEALS_MEDIA_TYPE).type(APPEALS_MEDIA_TYPE).post(AppealRepresentation.class, new ClientAppeal(appeal));
+        LOG.info("Created appealRepresentation {} denoted by the URI {}", appealRepresentation, appealRepresentation.getSelfLink().getUri().toString());
+        System.out.println(String.format("Appeal created at [%s]", appealRepresentation.getSelfLink().getUri().toString()));
+        System.out.println("\n\n");
+
+        LOG.info("Step 2. Delete the appeal , meaning abandoning the appeal");
+        System.out.println(String.format("Deleting appeal at [%s] via DELETE", appealRepresentation.getDeleteLink().getUri().toString()));
+        //appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.DELETED);
+        //LOG.debug("Changed appeal status to deleted before deleting-- {}", appeal);
+        LOG.info("Getting the delete appeal link from the previous representation");
+        Link1 deleteLink = appealRepresentation.getDeleteLink();
+        LOG.debug("Created appeal delete link {}", deleteLink);
+        System.out.println("Deleting the appeal");
+//        AppealRepresentation deletedRepresentation = client.resource(deleteLink.getUri())
+//                .accept(deleteLink.getMediaType())
+//                .type(deleteLink.getMediaType())
+//                .delete(AppealRepresentation.class);
+//        System.out.println("Appeal deleted...");
+//        LOG.info(" Deleted appeal representation : {}", deletedRepresentation);
+//        System.out.println("\n\n");
+        ClientResponse deleteResponse = client.resource(deleteLink.getUri()).accept(deleteLink.getMediaType()).type(deleteLink.getMediaType()).delete(ClientResponse.class);
+        LOG.info("Created BAD-URI Response {}", deleteResponse);
+        System.out.println(String.format("Deleted the Appeal with URI at [%s] via DELETE, output is [%d]",deleteLink.getUri().toString(),deleteResponse.getStatus()));
+        System.out.println("\n\n");
+
     }
 
     private static void hangAround(long backOffTimeInMillis) {
@@ -66,52 +232,61 @@ public class Main1 {
         Client client = Client.create();
         LOG.debug("Created client {}", client);    //Retrieving the Update Appeal link
         AppealRepresentation appealRepresentation = client.resource(serviceUri).accept(APPEALS_MEDIA_TYPE).type(APPEALS_MEDIA_TYPE).post(AppealRepresentation.class, new ClientAppeal(appeal));
-        LOG.debug("Created appealRepresentation {} denoted by the URI {}", appealRepresentation, appealRepresentation.getSelfLink().getUri().toString());
+        LOG.info("Created appealRepresentation {} denoted by the URI {}", appealRepresentation, appealRepresentation.getSelfLink().getUri().toString());
         System.out.println(String.format("Appeal created at [%s]", appealRepresentation.getSelfLink().getUri().toString()));
         System.out.println("\n\n");
         
         LOG.info("Step 2. Professor Accepting the appeal and changing the state to INPROCESS");
         System.out.println(String.format("About to update an appeal with URI [%s] via POST", appealRepresentation.getProcessLink().getUri().toString()));
-        appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.INPROCESS);
+        //appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.INPROCESS);
+        LOG.info("Getting the appeal from the previous representation and updating the status to Inprocess");
+        appeal = appealRepresentation.getAppeal();
+        appeal.setAppealStatus(AppealStatus.INPROCESS);
         LOG.debug("Created updated appeal-- {}", appeal);
         Link1 processLink = appealRepresentation.getProcessLink();
         LOG.debug("Created appeal process link {}", processLink);
         AppealRepresentation inprocessRepresentation = client.resource(processLink.getUri()).accept(processLink.getMediaType()).type(processLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
-        LOG.debug("Created in-process appeal representation link {}", inprocessRepresentation);
+        LOG.info("Created in-process appeal representation link {}", inprocessRepresentation);
         System.out.println(String.format("Appeal updated at [%s]", inprocessRepresentation.getSelfLink().getUri().toString()));
         System.out.println("\n\n");
 
         LOG.info("Step 3. Professor Update the appeal status to UPDATEGRADE after which he can access the grade link to update the score");
         System.out.println(String.format("About to update an appeal with URI [%s] via POST", inprocessRepresentation.getUpdateLink().getUri().toString()));
-        appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.UPDATEGRADE);
+        //appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.UPDATEGRADE);
+        LOG.info("Getting the appeal from the previous representation and updating the status to UpdateGrade");
+        appeal = inprocessRepresentation.getAppeal();
+        appeal.setAppealStatus(AppealStatus.UPDATEGRADE);
         LOG.debug("Created updated appeal-- {}", appeal);
         Link1 updateLink = inprocessRepresentation.getUpdateLink();
         LOG.debug("Created appeal update grade link {}", updateLink);
         AppealRepresentation updateGradeRepresentation = client.resource(updateLink.getUri()).accept(updateLink.getMediaType()).type(updateLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
-        LOG.debug("Created update-grade appeal representation link {}", updateGradeRepresentation);
+        LOG.info("Created update-grade appeal representation link {}", updateGradeRepresentation);
         System.out.println(String.format("Appeal updated at [%s]", updateGradeRepresentation.getSelfLink().getUri().toString()));
         System.out.println("\n\n");
 
         LOG.info("Step 4.A. Professor Updating the Grade resource using the link from previous step");
         System.out.println(String.format("About to update the grade with URI [%s] via POST", updateGradeRepresentation.getGradeLink().getUri().toString()));
-        LOG.debug("Creating updated grade -- ");
+        LOG.info("Creating the updated grade -- ");
         Grade grade = new Grade(1,1,90,"Marks Updated",GradeItem.ASSIGNMENT); 
         LOG.debug("Created updated grade-- {}", grade);
         Link1 gradeLink = updateGradeRepresentation.getGradeLink();
         LOG.debug("Created grade update link {}", gradeLink);
         GradeRepresentation gradeRepresentation = client.resource(gradeLink.getUri()).accept(gradeLink.getMediaType()).type(gradeLink.getMediaType()).put(GradeRepresentation.class, new GradeRepresentation(grade));
-        LOG.debug("Created updated grade representation link {}", gradeRepresentation);
+        LOG.info("Created updated grade representation link {}", gradeRepresentation);
         System.out.println(String.format("Grade updated at [%s]", gradeRepresentation.getUpdatedGradeLink().getUri().toString()));
         System.out.println("\n\n");
 
         LOG.info("Step 4.B. Professor Updates the appeal status to APPROVED after updating the grade");
         System.out.println(String.format("About to update an appeal with URI [%s] via POST", updateGradeRepresentation.getApproveLink().getUri().toString()));
-        appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.APPROVED);
+        //appeal = new Appeal(1, 1, "Re-Evaluation of my Assignment1",AppealStatus.APPROVED);
+        LOG.info("Getting the appeal from the previous representation and updating the status to Approved");
+        appeal = updateGradeRepresentation.getAppeal();
+        appeal.setAppealStatus(AppealStatus.APPROVED);
         LOG.debug("Created updated appeal-- {}", appeal);
         Link1 approveLink = updateGradeRepresentation.getApproveLink();
         LOG.debug("Created appeal approve link {}", approveLink);
         AppealRepresentation approveRepresentation = client.resource(approveLink.getUri()).accept(approveLink.getMediaType()).type(approveLink.getMediaType()).post(AppealRepresentation.class, new AppealRepresentation(appeal));
-        LOG.debug("Created approved appeal representation link {}", approveRepresentation);
+        LOG.info("Created approved appeal representation link {}", approveRepresentation);
         System.out.println(String.format("Appeal updated at [%s]", approveRepresentation.getSelfLink().getUri().toString()));
         System.out.println("\n\n");
 

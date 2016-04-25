@@ -1,7 +1,7 @@
-package com.restbucks.ordering.client.activities;
+package com.hateoas.appeals.activities;
 
-import com.hateoas.appeals.activities.NoSuchAppealException;
-import com.hateoas.appeals.activities.UpdateException;
+import com.restbucks.ordering.activities.NoSuchAppealException;
+import com.restbucks.ordering.activities.UpdateException;
 import com.restbucks.ordering.model.Appeal;
 import com.restbucks.ordering.model.AppealStatus;
 import com.restbucks.ordering.model.Identifier;
@@ -15,7 +15,7 @@ public class UpdateAppealActivity {
     
     public AppealRepresentation update(Appeal appeal, AppealsUri appealUri) {
         Identifier appealIdentifier = appealUri.getId();
- 
+
         AppealsUri gradeUri = new AppealsUri(appealUri.getBaseUri() + "/grade/" + appeal.getGradeId());
         
         AppealRepository repository = AppealRepository.current();
@@ -36,16 +36,19 @@ public class UpdateAppealActivity {
         if(appeal.getStatus() == AppealStatus.FOLLOWUP) {
             return  new AppealRepresentation(storedAppeal, 
                     new Link1(Representation1.RELATIONS_URI + "process", appealUri),
+                    new Link1(Representation1.RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.RELATIONS_URI + "delete", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.INPROCESS) {
             return  new AppealRepresentation(storedAppeal, 
-                    new Link1(Representation1.RELATIONS_URI + "grade", gradeUri),
+                    new Link1(Representation1.RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.RELATIONS_URI + "reject", appealUri), 
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.UPDATEGRADE) {
             return  new AppealRepresentation(storedAppeal,
-                    new Link1(Representation1.RELATIONS_URI + "approve", appealUri), 
+                    new Link1(Representation1.RELATIONS_URI + "approve", appealUri),
+                    new Link1(Representation1.RELATIONS_URI + "grade", gradeUri),
+                    new Link1(Representation1.RELATIONS_URI + "update", appealUri),
                     new Link1(Representation1.SELF_REL_VALUE, appealUri));
         } else if(appeal.getStatus() == AppealStatus.APPROVED) {
             return  new AppealRepresentation(storedAppeal,
@@ -54,8 +57,8 @@ public class UpdateAppealActivity {
             return  new AppealRepresentation(storedAppeal,
                     new Link1(Representation1.SELF_REL_VALUE, appealUri)); 
         } else if(appeal.getStatus() == AppealStatus.DELETED) {
-            return  new AppealRepresentation(storedAppeal,
-                    new Link1(Representation1.SELF_REL_VALUE, appealUri));            
+            return  new AppealRepresentation(storedAppeal);
+//                    new Link1(Representation1.SELF_REL_VALUE, appealUri));            
         }
         else
             return AppealRepresentation.createResponseAppealRepresentation(storedAppeal, appealUri); 
